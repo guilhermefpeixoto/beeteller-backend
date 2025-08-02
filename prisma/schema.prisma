@@ -1,0 +1,42 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model PixMessage {
+  id           String      @id @default(uuid())
+  endToEndId   String      @unique
+  amount       BigInt      @default(0) @db.BigInt
+  payerId      String
+  payer        Participant @relation("Payer", fields: [payerId], references: [id])
+  receiverId   String
+  receiver     Participant @relation("Receiver", fields: [receiverId], references: [id])
+  receiverIsbp String      @db.VarChar(8)
+  freeText     String?     @db.Text
+  txId         String      @unique
+  paidAt       DateTime    @db.Timestamptz
+
+  @@index([receiverIsbp])
+  @@map("pix_messages")
+}
+
+model Participant {
+  id            String @id @default(uuid())
+  name          String
+  cpfCnpj       String @db.VarChar(14)
+  ispb          String @db.VarChar(8)
+  branchCode    String @db.VarChar(4)
+  accountNumber String @db.VarChar(10)
+  accountType   String @db.VarChar(4)
+
+  payerPixMessages PixMessage[] @relation("Payer")
+  receiverMessages PixMessage[] @relation("Receiver")
+
+  @@unique([ispb, branchCode, accountNumber])
+  @@map("participants")
+}

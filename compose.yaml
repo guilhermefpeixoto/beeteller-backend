@@ -1,0 +1,16 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: pix-messages-db
+    restart: on-failure
+    environment:
+      POSTGRES_USER: api
+      POSTGRES_PASSWORD: api
+      POSTGRES_DB: pix_messages
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+volumes:
+  pg_data:
