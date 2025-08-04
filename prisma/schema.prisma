@@ -1,6 +1,5 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -16,13 +15,13 @@ model PixMessage {
   payer        Participant @relation("Payer", fields: [payerId], references: [id])
   receiverId   String
   receiver     Participant @relation("Receiver", fields: [receiverId], references: [id])
-  receiverIsbp String      @db.VarChar(8)
+  receiverIspb String      @db.VarChar(8)
   freeText     String?     @db.Text
   txId         String      @unique
   paidAt       DateTime    @db.Timestamptz
 
-  @@index([receiverIsbp])
-  @@map("pix_messages")
+  @@index([receiverIspb])
+  @@map("pix_message")
 }
 
 model Participant {
@@ -38,5 +37,5 @@ model Participant {
   receiverMessages PixMessage[] @relation("Receiver")
 
   @@unique([ispb, branchCode, accountNumber])
-  @@map("participants")
+  @@map("participant")
 }
