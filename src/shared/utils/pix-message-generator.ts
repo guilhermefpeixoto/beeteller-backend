@@ -1,5 +1,4 @@
-import { CreateManyPixMessagesPayload } from "@/domain/repositories/pix-message.repository.interface";
-import { CreateParticipantType, CreatePixMessageType } from "@/domain/schemas/create-pix-messages.schema";
+import { CreateManyPixMessagesPayload, ICreateParticipant, ICreatePixMessage } from "@/domain/repositories/pix-message.repository.interface";
 import { Faker, pt_BR } from "@faker-js/faker";
 
 
@@ -14,13 +13,13 @@ export function generatePixMessages(ispb: string, quantity: number): CreateManyP
 
   const ispbList = ['00000000', '00360305', '60746948', '90400888', '60701190']
 
-  const participants: CreateParticipantType[] = [];
-  const pixMessages: CreatePixMessageType[] = [];
+  const participants: ICreateParticipant[] = [];
+  const pixMessages: ICreatePixMessage[] = [];
 
   for (let i = 0; i < quantity; i++) {
     const paidAt = new Date();
 
-    const payer: CreateParticipantType = {
+    const payer: ICreateParticipant = {
       id: faker.string.uuid(),
       name: faker.person.fullName(),
       cpfCnpj: generateCpfOrCnpj(),
@@ -30,7 +29,7 @@ export function generatePixMessages(ispb: string, quantity: number): CreateManyP
       accountType: faker.helpers.arrayElement(accountTypes)
     };
 
-    const receiver: CreateParticipantType = {
+    const receiver: ICreateParticipant = {
       id: faker.string.uuid(),
       name: faker.person.fullName(),
       cpfCnpj: generateCpfOrCnpj(),
@@ -40,7 +39,7 @@ export function generatePixMessages(ispb: string, quantity: number): CreateManyP
       accountType: faker.helpers.arrayElement(accountTypes)
     };
 
-    const pixMessage: CreatePixMessageType = {
+    const pixMessage: ICreatePixMessage = {
       id: faker.string.uuid(),
       endToEndId: `E${payer.ispb}${formatEndToEndIdDate(paidAt)}${faker.string.alphanumeric(15)}`.toUpperCase(),
       amount: BigInt(faker.number.int({ min: 100, max: 1000000 })),
