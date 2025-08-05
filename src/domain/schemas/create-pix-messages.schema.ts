@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+
 const createParticipantSchema = z.object({
   id: z.uuidv4(),
   name: z.string(),

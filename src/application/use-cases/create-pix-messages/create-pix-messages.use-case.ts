@@ -1,5 +1,6 @@
-import { IPixMessageRepository } from "../../../domain/repositories/pix-message.repository.interface";
-import { generatePixMessages } from "../../../shared/utils/pix-message-generator";
+import { IPixMessageRepository } from "@/domain/repositories/pix-message.repository.interface";
+import { generatePixMessages } from "@/shared/utils/pix-message-generator";
+
 
 export class CreatePixMessagesUseCase {
   constructor(private pixMessageRepository: IPixMessageRepository) { }

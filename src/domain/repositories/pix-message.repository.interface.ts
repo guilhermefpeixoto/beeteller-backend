@@ -1,5 +1,6 @@
 import { CreateParticipantType, CreatePixMessageType } from "../schemas/create-pix-messages.schema";
 
+
 export type CreateManyPixMessagesPayload = {
   participants: CreateParticipantType[];
   pixMessages: CreatePixMessageType[];

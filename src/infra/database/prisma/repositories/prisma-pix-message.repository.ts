@@ -1,5 +1,6 @@
-import { CreateManyPixMessagesPayload, IPixMessageRepository } from "../../../../domain/repositories/pix-message.repository.interface";
-import prisma  from "../index";
+import { CreateManyPixMessagesPayload, IPixMessageRepository } from "@/domain/repositories/pix-message.repository.interface";
+import prisma from "..";
+
 
 export class PrismaPixMessageRepository implements IPixMessageRepository {
   async createMany(payload: CreateManyPixMessagesPayload): Promise<void> {

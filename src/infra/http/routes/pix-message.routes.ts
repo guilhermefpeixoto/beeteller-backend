@@ -1,7 +1,8 @@
+import { CreatePixMessagesUseCase } from "@/application/use-cases/create-pix-messages/create-pix-messages.use-case";
+import { PrismaPixMessageRepository } from "@/infra/database/prisma/repositories/prisma-pix-message.repository";
 import { Router } from "express";
 import { PixMessageController } from "../controllers/pix-message.controller";
-import { PrismaPixMessageRepository } from "../../database/prisma/repositories/prisma-pix-message.repository";
-import { CreatePixMessagesUseCase } from "../../../application/use-cases/create-pix-messages/create-pix-messages.use-case";
+
 
 const pixMessageRoutes = Router();
 

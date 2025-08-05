@@ -1,6 +1,7 @@
 import z from "zod";
-import { CreatePixMessagesUseCase } from "../../../application/use-cases/create-pix-messages/create-pix-messages.use-case";
 import { Request, Response } from "express";
+import { CreatePixMessagesUseCase } from "@/application/use-cases/create-pix-messages/create-pix-messages.use-case";
+
 
 const createPixMessageParamsSchema = z.object({
   ispb: z.string().length(8),

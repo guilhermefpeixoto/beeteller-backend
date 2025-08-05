@@ -1,6 +1,7 @@
+import { CreateManyPixMessagesPayload } from "@/domain/repositories/pix-message.repository.interface";
+import { CreateParticipantType, CreatePixMessageType } from "@/domain/schemas/create-pix-messages.schema";
 import { Faker, pt_BR } from "@faker-js/faker";
-import { CreateManyPixMessagesPayload } from "../../domain/repositories/pix-message.repository.interface";
-import { CreateParticipantType, CreatePixMessageType } from "../../domain/schemas/create-pix-messages.schema";
+
 
 const faker = new Faker({ locale: [pt_BR] });
 
