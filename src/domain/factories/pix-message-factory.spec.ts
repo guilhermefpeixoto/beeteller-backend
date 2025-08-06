@@ -1,8 +1,7 @@
-import { faker } from '@faker-js/faker';
 import { fail } from 'assert';
 import { generatePixMessages } from './pix-message-factory';
 
-describe('generatePixMessages', () => {
+describe('PixMessageFactory', () => {
 
   it('should return empty arrays if quantity is 0', () => {
     const ispb = '12345678';
@@ -27,10 +26,6 @@ describe('generatePixMessages', () => {
   describe('when quantity is valid', () => {
     const ispb = '87654321';
     const quantity = 3;
-
-    beforeEach(() => {
-      faker.seed(123);
-    });
 
     it('should generate the correct number of participants and pix messages', () => {
       const { participants, pixMessages } = generatePixMessages(ispb, quantity);
