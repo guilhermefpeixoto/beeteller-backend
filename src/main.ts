@@ -1,5 +1,5 @@
 import { app } from './infra/http/server'
-
+import 'dotenv/config'; 
 
 const PORT = 8000;
 
