@@ -1,6 +1,5 @@
 import z from "zod";
 import { Request, Response } from "express";
-import { CreatePixMessagesUseCase } from "@/application/use-cases/create-pix-messages/create-pix-messages.use-case";
 import { FindPixMessageByIspbUseCase } from "@/application/use-cases/find-pix-message/find-pix-message.use-case";
 import { pixMessageNotifier } from "@/infra/events/new-pix-message.notifier";
 import { PixMessageMapper } from "../mappers/pix-message.mapper";
@@ -12,12 +11,6 @@ import { CreateStreamPullUseCase } from "@/application/use-cases/create-stream-p
 import { UpdateStreamPullUseCase } from "@/application/use-cases/update-stream-pull/update-stream-pull.use-case";
 import { InvalidInputError } from "@/shared/errors/InvalidInputError";
 import { NotAcceptableHeaderError } from "@/infra/errors/NotAcceptableHeaderError";
-
-
-const createPixMessageParamsSchema = z.object({
-  ispb: z.string().length(8),
-  number: z.coerce.number().positive(),
-});
 
 const findPixMessageByIspbParamSchema = z.object({
   ispb: z.string().length(8),
@@ -37,27 +30,14 @@ type LongPollingConfig = {
 }
 
 export class PixMessageController {
-  constructor(private readonly createPixMessagesUseCase: CreatePixMessagesUseCase,
+  constructor(
     private readonly findPixMessageByIspbUseCase: FindPixMessageByIspbUseCase,
     private readonly findPixMessagesByIspbUseCase: FindPixMessagesByIspbUseCase,
     private readonly deleteStreamUseCase: DeleteStreamUseCase,
     private readonly createStreamUseCase: CreateStreamUseCase,
     private readonly createStreamPullUseCase: CreateStreamPullUseCase,
-  private readonly updateStreamPullUseCase: UpdateStreamPullUseCase) { }
+    private readonly updateStreamPullUseCase: UpdateStreamPullUseCase) { }
 
-  async create(req: Request, res: Response): Promise<Response> {
-    const validationResult = createPixMessageParamsSchema.safeParse(req.params);
-
-    if (!validationResult.success) {
-      throw new InvalidInputError('Invalid params input');
-    }
-
-    const data = validationResult.data;
-
-    await this.createPixMessagesUseCase.execute(data.ispb, data.number);
-
-    return res.status(201).send();
-  }
 
   async findByIspb(req: Request, res: Response): Promise<Response | void> {
     const validationResult = findPixMessageByIspbParamSchema.safeParse(req.params);

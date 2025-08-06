@@ -9,9 +9,10 @@ import { DeleteStreamUseCase } from "@/application/use-cases/delete-stream/delet
 import { CreateStreamUseCase } from "@/application/use-cases/create-stream/create-stream.use-case";
 import { CreateStreamPullUseCase } from "@/application/use-cases/create-stream-pull/create-stream-pull.use-case";
 import { UpdateStreamPullUseCase } from "@/application/use-cases/update-stream-pull/update-stream-pull.use-case";
+import { UtilController } from "../controllers/util-controller";
 
 
-const pixMessageRoutes = Router();
+const routes = Router();
 const pixMessageRepository = new PrismaPixMessageRepository();
 const streamRepository = new PrismaStreamRepository();
 const createPixMessagesUseCase = new CreatePixMessagesUseCase(pixMessageRepository);
@@ -21,11 +22,12 @@ const deleteStreamUseCase = new DeleteStreamUseCase(streamRepository);
 const createStreamUseCase = new CreateStreamUseCase(streamRepository);
 const createStreamPullUseCase = new CreateStreamPullUseCase(streamRepository);
 const updateStreamPullUseCase = new UpdateStreamPullUseCase(streamRepository);
-const pixMessageController = new PixMessageController(createPixMessagesUseCase, findPixMessageByIspbUseCase, findPixMessagesByIspbUseCase, deleteStreamUseCase, createStreamUseCase, createStreamPullUseCase, updateStreamPullUseCase);
+const utilController = new UtilController(createPixMessagesUseCase);
+const pixMessageController = new PixMessageController(findPixMessageByIspbUseCase, findPixMessagesByIspbUseCase, deleteStreamUseCase, createStreamUseCase, createStreamPullUseCase, updateStreamPullUseCase);
 
-pixMessageRoutes.post('/util/msgs/:ispb/:number', async (req, res) => { await pixMessageController.create(req, res) });
-pixMessageRoutes.get('/pix/:ispb/stream/start', async (req, res) => { await pixMessageController.findByIspb(req, res) });
-pixMessageRoutes.get('/pix/:ispb/stream/:iterationId', async (req, res) => { await pixMessageController.findByIspbStream(req, res) });
-pixMessageRoutes.delete('/pix/:ispb/stream/:iterationId', async (req, res) => { await pixMessageController.delete(req, res) });
+routes.post('/util/msgs/:ispb/:number', async (req, res) => { await utilController.create(req, res) });
+routes.get('/pix/:ispb/stream/start', async (req, res) => { await pixMessageController.findByIspb(req, res) });
+routes.get('/pix/:ispb/stream/:iterationId', async (req, res) => { await pixMessageController.findByIspbStream(req, res) });
+routes.delete('/pix/:ispb/stream/:iterationId', async (req, res) => { await pixMessageController.delete(req, res) });
 
-export { pixMessageRoutes };
+export { routes };

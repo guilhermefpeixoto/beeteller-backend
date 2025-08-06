@@ -26,7 +26,7 @@ describe('CreatePixMessagesUseCase', () => {
       const quantity = 0;
 
       await expect(createPixMessagesUseCase.execute(ispb, quantity))
-        .rejects.toThrow('Quantity should be a positive number.');
+        .rejects.toThrow('Quantity should be a positive number');
 
       expect(mockPixMessageRepository.createMany).not.toHaveBeenCalled();
     });
@@ -36,7 +36,7 @@ describe('CreatePixMessagesUseCase', () => {
       const quantity = -1;
 
       await expect(createPixMessagesUseCase.execute(ispb, quantity))
-        .rejects.toThrow('Quantity should be a positive number.');
+        .rejects.toThrow('Quantity should be a positive number');
 
       expect(mockPixMessageRepository.createMany).not.toHaveBeenCalled();
     });
