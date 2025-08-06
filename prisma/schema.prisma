@@ -19,8 +19,9 @@ model PixMessage {
   freeText     String?     @db.Text
   txId         String      @unique
   paidAt       DateTime    @db.Timestamptz
+  isRead       Boolean     @default(false)
 
-  @@index([receiverIspb])
+  @@index([receiverIspb, isRead])
   @@map("pix_message")
 }
 
@@ -38,4 +39,28 @@ model Participant {
 
   @@unique([ispb, branchCode, accountNumber])
   @@map("participant")
+}
+
+model Stream {
+  id   String @id @default(uuid())
+  ispb String @db.VarChar(8)
+
+  streamPulls StreamPull[]
+
+  @@map("stream")
+}
+
+model StreamPull {
+  id          String       @id @default(uuid())
+  streamId    String
+  iterationId String       @unique
+  status      StreamStatus @default(OPEN)
+  stream      Stream       @relation(fields: [streamId], references: [id], onDelete: Cascade)
+
+  @@map("stream_pull")
+}
+
+enum StreamStatus {
+  OPEN
+  CLOSED
 }
