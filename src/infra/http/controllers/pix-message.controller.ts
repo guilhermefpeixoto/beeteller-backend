@@ -10,6 +10,8 @@ import { DeleteStreamUseCase } from "@/application/use-cases/delete-stream/delet
 import { CreateStreamUseCase } from "@/application/use-cases/create-stream/create-stream.use-case";
 import { CreateStreamPullUseCase } from "@/application/use-cases/create-stream-pull/create-stream-pull.use-case";
 import { UpdateStreamPullUseCase } from "@/application/use-cases/update-stream-pull/update-stream-pull.use-case";
+import { InvalidInputError } from "@/shared/errors/InvalidInputError";
+import { NotAcceptableHeaderError } from "@/infra/errors/NotAcceptableHeaderError";
 
 
 const createPixMessageParamsSchema = z.object({
@@ -47,7 +49,7 @@ export class PixMessageController {
     const validationResult = createPixMessageParamsSchema.safeParse(req.params);
 
     if (!validationResult.success) {
-      return res.status(400).send();
+      throw new InvalidInputError('Invalid params input');
     }
 
     const data = validationResult.data;
@@ -61,7 +63,7 @@ export class PixMessageController {
     const validationResult = findPixMessageByIspbParamSchema.safeParse(req.params);
 
     if (!validationResult.success) {
-      return res.status(400).send();
+      throw new InvalidInputError('Invalid params input');
     }
 
     const ispb = validationResult.data.ispb;
@@ -88,7 +90,7 @@ export class PixMessageController {
       return this.longPolling(res, ispb, config);
     }
     else {
-      return res.status(406).json("Value of 'Accept' header invalid");
+      throw new NotAcceptableHeaderError("Value of 'Accept' header invalid");
     }
   }
 
@@ -96,7 +98,7 @@ export class PixMessageController {
     const validationResult = findPixMessageByIspbStreamParamsSchema.safeParse(req.params);
 
     if (!validationResult.success) {
-      return res.status(400).send();
+      throw new InvalidInputError('Invalid params input');
     }
 
     const { ispb, iterationId } = validationResult.data;
@@ -125,7 +127,7 @@ export class PixMessageController {
       return this.longPolling(res, ispb, config);
     }
     else {
-      return res.status(406).json("Value of 'Accept' header invalid");
+      throw new NotAcceptableHeaderError("Value of 'Accept' header invalid");
     }
   }
 
@@ -133,7 +135,7 @@ export class PixMessageController {
     const validationResult = findPixMessageByIspbStreamParamsSchema.safeParse(req.params);
 
     if (!validationResult.success) {
-      return res.status(400).send();
+      throw new InvalidInputError('Invalid params input');
     }
 
     const { ispb, iterationId } = validationResult.data;
@@ -151,7 +153,7 @@ export class PixMessageController {
     }
 
     if (config.iterationId) {
-      const streamId = await this.updateStreamPullUseCase.execute(config.iterationId);
+      const streamId = await this.updateStreamPullUseCase.execute(ispb, config.iterationId);
       nextIterationId = await this.createStreamPullUseCase.execute(streamId)
     }
 

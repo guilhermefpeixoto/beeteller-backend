@@ -23,9 +23,9 @@ const createStreamPullUseCase = new CreateStreamPullUseCase(streamRepository);
 const updateStreamPullUseCase = new UpdateStreamPullUseCase(streamRepository);
 const pixMessageController = new PixMessageController(createPixMessagesUseCase, findPixMessageByIspbUseCase, findPixMessagesByIspbUseCase, deleteStreamUseCase, createStreamUseCase, createStreamPullUseCase, updateStreamPullUseCase);
 
-pixMessageRoutes.post('/util/msgs/:ispb/:number', (req, res) => { pixMessageController.create(req, res) });
-pixMessageRoutes.get('/pix/:ispb/stream/start', (req, res) => { pixMessageController.findByIspb(req, res) });
-pixMessageRoutes.get('/pix/:ispb/stream/:iterationId', (req, res) => { pixMessageController.findByIspbStream(req, res) });
-pixMessageRoutes.delete('/pix/:ispb/stream/:iterationId', (req, res) => { pixMessageController.delete(req, res) });
+pixMessageRoutes.post('/util/msgs/:ispb/:number', async (req, res) => { await pixMessageController.create(req, res) });
+pixMessageRoutes.get('/pix/:ispb/stream/start', async (req, res) => { await pixMessageController.findByIspb(req, res) });
+pixMessageRoutes.get('/pix/:ispb/stream/:iterationId', async (req, res) => { await pixMessageController.findByIspbStream(req, res) });
+pixMessageRoutes.delete('/pix/:ispb/stream/:iterationId', async (req, res) => { await pixMessageController.delete(req, res) });
 
 export { pixMessageRoutes };
