@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { fail } from 'assert';
-import { generatePixMessages } from './pix-message-generator';
+import { generatePixMessages } from './pix-message-factory';
 
 describe('generatePixMessages', () => {
 

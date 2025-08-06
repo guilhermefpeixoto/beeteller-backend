@@ -1,10 +1,10 @@
-import { CreateManyPixMessagesPayload, ICreateParticipant, ICreatePixMessage } from "@/domain/repositories/pix-message.repository.interface";
+import { ICreateManyPixMessagesPayload, ICreateParticipantPayload, ICreatePixMessagePayload } from "@/domain/repositories/pix-message.repository.interface";
 import { Faker, pt_BR } from "@faker-js/faker";
 
 
 const faker = new Faker({ locale: [pt_BR] });
 
-export function generatePixMessages(ispb: string, quantity: number): CreateManyPixMessagesPayload {
+export function generatePixMessages(ispb: string, quantity: number): ICreateManyPixMessagesPayload {
   if (quantity <= 0) {
     return { participants: [], pixMessages: [] };
   }
@@ -13,13 +13,13 @@ export function generatePixMessages(ispb: string, quantity: number): CreateManyP
 
   const ispbList = ['00000000', '00360305', '60746948', '90400888', '60701190']
 
-  const participants: ICreateParticipant[] = [];
-  const pixMessages: ICreatePixMessage[] = [];
+  const participants: ICreateParticipantPayload[] = [];
+  const pixMessages: ICreatePixMessagePayload[] = [];
 
   for (let i = 0; i < quantity; i++) {
     const paidAt = new Date();
 
-    const payer: ICreateParticipant = {
+    const payer: ICreateParticipantPayload = {
       id: faker.string.uuid(),
       name: faker.person.fullName(),
       cpfCnpj: generateCpfOrCnpj(),
@@ -29,7 +29,7 @@ export function generatePixMessages(ispb: string, quantity: number): CreateManyP
       accountType: faker.helpers.arrayElement(accountTypes)
     };
 
-    const receiver: ICreateParticipant = {
+    const receiver: ICreateParticipantPayload = {
       id: faker.string.uuid(),
       name: faker.person.fullName(),
       cpfCnpj: generateCpfOrCnpj(),
@@ -39,7 +39,7 @@ export function generatePixMessages(ispb: string, quantity: number): CreateManyP
       accountType: faker.helpers.arrayElement(accountTypes)
     };
 
-    const pixMessage: ICreatePixMessage = {
+    const pixMessage: ICreatePixMessagePayload = {
       id: faker.string.uuid(),
       endToEndId: `E${payer.ispb}${formatEndToEndIdDate(paidAt)}${faker.string.alphanumeric(15)}`.toUpperCase(),
       amount: BigInt(faker.number.int({ min: 100, max: 1000000 })),
