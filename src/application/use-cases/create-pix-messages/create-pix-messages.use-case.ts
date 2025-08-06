@@ -1,5 +1,6 @@
+import { generatePixMessages } from "@/domain/factories/pix-message-factory";
 import { IPixMessageRepository } from "@/domain/repositories/pix-message.repository.interface";
-import { generatePixMessages } from "@/shared/utils/pix-message-generator";
+import { pixMessageNotifier } from "@/infra/events/new-pix-message.notifier";
 
 
 export class CreatePixMessagesUseCase {
@@ -13,5 +14,7 @@ export class CreatePixMessagesUseCase {
     const pixMessages = generatePixMessages(ispb, quantity);
 
     await this.pixMessageRepository.createMany(pixMessages);
+
+    pixMessageNotifier.emit(`newPixMessageTo${ispb}`);
   }
 }

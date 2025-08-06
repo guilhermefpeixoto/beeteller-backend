@@ -1,8 +1,8 @@
 import { CreatePixMessagesUseCase } from './create-pix-messages.use-case';
 import { IPixMessageRepository } from '../../../domain/repositories/pix-message.repository.interface';
-import { generatePixMessages } from '../../../shared/utils/pix-message-generator';
+import { generatePixMessages } from '../../../domain/factories/pix-message-factory';
 
-jest.mock('../../../shared/utils/pix-message-generator');
+jest.mock('../../../domain/factories/pix-message-factory');
 
 describe('CreatePixMessagesUseCase', () => {
   let createPixMessagesUseCase: CreatePixMessagesUseCase;
@@ -13,6 +13,8 @@ describe('CreatePixMessagesUseCase', () => {
 
     mockPixMessageRepository = {
       createMany: jest.fn(),
+      findPixMessageByIspb: jest.fn(),
+      findPixMessagesByIspb: jest.fn(),
     };
 
     createPixMessagesUseCase = new CreatePixMessagesUseCase(mockPixMessageRepository);
