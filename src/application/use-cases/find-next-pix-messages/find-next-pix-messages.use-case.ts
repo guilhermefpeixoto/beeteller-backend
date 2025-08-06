@@ -32,7 +32,7 @@ export class FindNextPixMessagesUseCase {
     const streamId = await this.getStreamId(ispb, iterationId);
 
     const limit = acceptHeaderType == 'application/json' ? 1 : 10;
-    
+
     let pixMessages = await this.pixMessageRepository.findPixMessagesByIspb(ispb, limit);
 
     if (pixMessages.length == 0) {
@@ -84,33 +84,49 @@ export class FindNextPixMessagesUseCase {
   }
 
   private async awaitNewPixMessages(ispb: string, limit: number): Promise<IPixMessageWithParticipants[]> {
-    const event = `newPixMessageTo${ispb}`;
-    const startWaitTime = Date.now();
+    const eventName = `newPixMessageTo${ispb}`;
+    const startTime = Date.now();
     let remainingWaitTime = LONG_POLLING_TIMEOUT;
     let pixMessages: IPixMessageWithParticipants[] = [];
 
     while (remainingWaitTime > 0) {
-      const eventPromise = new Promise<boolean>((resolve) => {
-        pixMessageNotifier.once(event, () => resolve(true));
-      });
-      const timeoutPromise = new Promise<boolean>((resolve) => {
-        setTimeout(() => resolve(false), remainingWaitTime);
-      });
+      let timeoutId: NodeJS.Timeout | null = null;
+      let listenerCallback: (() => void) | undefined = undefined;
 
-      const newMessages = await Promise.race([eventPromise, timeoutPromise]);
+      try {
+        const eventPromise = new Promise<boolean>((resolve) => {
+          listenerCallback = () => resolve(true);
+          pixMessageNotifier.once(eventName, listenerCallback);
+        });
 
-      if (newMessages) {
-        pixMessages = await this.pixMessageRepository.findPixMessagesByIspb(ispb, limit);
-        if (pixMessages.length > 0) {
+        const timeoutPromise = new Promise<boolean>((resolve) => {
+          timeoutId = setTimeout(() => resolve(false), remainingWaitTime);
+        });
+
+        const eventArrived = await Promise.race([eventPromise, timeoutPromise]);
+
+        if (eventArrived) {
+          pixMessages = await this.pixMessageRepository.findPixMessagesByIspb(ispb, limit);
+          if (pixMessages.length > 0) {
+            break;
+          }
+        } else {
           break;
         }
-      } else {
-        break;
+      } finally {
+        if (timeoutId) {
+          clearTimeout(timeoutId);
+        }
+
+        if (listenerCallback) {
+          pixMessageNotifier.removeListener(eventName, listenerCallback);
+        }
       }
 
-      const elapsedTime = Date.now() - startWaitTime;
+      const elapsedTime = Date.now() - startTime;
       remainingWaitTime = LONG_POLLING_TIMEOUT - elapsedTime;
     }
+
     return pixMessages;
   }
 
