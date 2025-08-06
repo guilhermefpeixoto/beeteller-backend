@@ -47,6 +47,5 @@ export interface IPixMessageWithParticipants {
 
 export interface IPixMessageRepository {
   createMany(payload: ICreateManyPixMessagesPayload): Promise<void>;
-  findPixMessageByIspb(ispb: string): Promise<IPixMessageWithParticipants | null>;
-  findPixMessagesByIspb(ispb: string): Promise<IPixMessageWithParticipants[]>;
+  findPixMessagesByIspb(ispb: string, limit: number): Promise<IPixMessageWithParticipants[]>;
 }

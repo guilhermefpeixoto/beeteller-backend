@@ -34,7 +34,7 @@ describe('generatePixMessages', () => {
 
     it('should generate the correct number of participants and pix messages', () => {
       const { participants, pixMessages } = generatePixMessages(ispb, quantity);
-      
+
       expect(participants).toHaveLength(quantity * 2);
       expect(pixMessages).toHaveLength(quantity);
     });
@@ -45,11 +45,11 @@ describe('generatePixMessages', () => {
       pixMessages.forEach(message => {
         expect(message.receiverIspb).toBe(ispb);
         const receiver = participants.find(p => p.id === message.receiverId);
-        
+
         if (!receiver) {
           fail('Receiver participant should exist for each message');
         }
-        
+
         expect(receiver.ispb).toBe(ispb);
       });
     });
@@ -77,7 +77,7 @@ describe('generatePixMessages', () => {
     it('should format endToEndId correctly', () => {
       const { pixMessages, participants } = generatePixMessages(ispb, quantity);
       const message = pixMessages[0];
- 
+
       if (!message) {
         fail('First message is missing.');
       }
@@ -87,9 +87,9 @@ describe('generatePixMessages', () => {
       if (!payer) {
         fail('Payer is missing.');
       }
-      
+
       const expectedPrefix = `E${payer.ispb}${message.paidAt.getFullYear()}${(message.paidAt.getMonth() + 1).toString().padStart(2, '0')}${message.paidAt.getDate().toString().padStart(2, '0')}`;
-      
+
       expect(message.endToEndId).toHaveLength(32);
       expect(message.endToEndId.startsWith(expectedPrefix)).toBe(true);
       expect(message.endToEndId).toBe(message.endToEndId.toUpperCase());

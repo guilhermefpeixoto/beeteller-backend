@@ -58,7 +58,7 @@ export class PrismaStreamRepository implements IStreamRepository {
         streamId: true
       }
     });
-    
+
     return data.streamId;
   }
 

@@ -13,16 +13,16 @@ export class UtilController {
   constructor(private readonly createPixMessagesUseCase: CreatePixMessagesUseCase) { }
 
   async create(req: Request, res: Response): Promise<Response> {
-      const validationResult = createPixMessageParamsSchema.safeParse(req.params);
-  
-      if (!validationResult.success) {
-        throw new InvalidInputError('Invalid params input');
-      }
-  
-      const data = validationResult.data;
-  
-      await this.createPixMessagesUseCase.execute(data.ispb, data.number);
-  
-      return res.status(201).send();
+    const validationResult = createPixMessageParamsSchema.safeParse(req.params);
+
+    if (!validationResult.success) {
+      throw new InvalidInputError('Invalid params input');
     }
+
+    const data = validationResult.data;
+
+    await this.createPixMessagesUseCase.execute(data.ispb, data.number);
+
+    return res.status(201).send();
+  }
 }

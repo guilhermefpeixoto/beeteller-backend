@@ -23,14 +23,8 @@ export class PrismaPixMessageRepository implements IPixMessageRepository {
     }
   }
 
-  async findPixMessageByIspb(ispb: PixMessage['receiverIspb']): Promise<IPixMessageWithParticipants | null> {
-    const pixMessages = await this.findPixMessagesByIspb(ispb, 1);
-
-    return pixMessages.length > 0 ? pixMessages[0]! : null;
-  }
-
   async findPixMessagesByIspb(ispb: PixMessage['receiverIspb'],
-    limit: number = 10): Promise<IPixMessageWithParticipants[]> {
+    limit: number): Promise<IPixMessageWithParticipants[]> {
     const lockedPixMessages = await prisma.$transaction(async (tx) => {
       const pixMessagestoLock = await tx.$queryRaw <{ id: string }[]> `
       SELECT "id" FROM "pix_message"

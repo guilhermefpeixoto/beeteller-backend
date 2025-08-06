@@ -13,7 +13,6 @@ describe('CreatePixMessagesUseCase', () => {
 
     mockPixMessageRepository = {
       createMany: jest.fn(),
-      findPixMessageByIspb: jest.fn(),
       findPixMessagesByIspb: jest.fn(),
     };
 
@@ -46,9 +45,9 @@ describe('CreatePixMessagesUseCase', () => {
     it('should call the repository with the data generated', async () => {
       const ispb = '87654321';
       const quantity = 5;
-      
+
       const fakeGeneratedPayload = {
-        participants: [{ id: 'fake-payer' }, { id: 'fake-receiver' } ],
+        participants: [{ id: 'fake-payer' }, { id: 'fake-receiver' }],
         pixMessages: [{ id: 'fake-pix-message' }],
       };
 
