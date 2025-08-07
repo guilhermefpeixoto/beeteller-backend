@@ -1,0 +1,66 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model PixMessage {
+  id           String      @id @default(uuid())
+  endToEndId   String      @unique
+  amount       BigInt      @default(0) @db.BigInt
+  payerId      String
+  payer        Participant @relation("Payer", fields: [payerId], references: [id])
+  receiverId   String
+  receiver     Participant @relation("Receiver", fields: [receiverId], references: [id])
+  receiverIspb String      @db.VarChar(8)
+  freeText     String?     @db.Text
+  txId         String      @unique
+  paidAt       DateTime    @db.Timestamptz
+  isRead       Boolean     @default(false)
+
+  @@index([receiverIspb, isRead])
+  @@map("pix_message")
+}
+
+model Participant {
+  id            String @id @default(uuid())
+  name          String
+  cpfCnpj       String @db.VarChar(14)
+  ispb          String @db.VarChar(8)
+  branchCode    String @db.VarChar(4)
+  accountNumber String @db.VarChar(10)
+  accountType   String @db.VarChar(4)
+
+  payerPixMessages PixMessage[] @relation("Payer")
+  receiverMessages PixMessage[] @relation("Receiver")
+
+  @@unique([ispb, branchCode, accountNumber])
+  @@map("participant")
+}
+
+model Stream {
+  id   String @id @default(uuid())
+  ispb String @db.VarChar(8)
+
+  streamPulls StreamPull[]
+
+  @@map("stream")
+}
+
+model StreamPull {
+  id          String       @id @default(uuid())
+  streamId    String
+  iterationId String       @unique
+  status      StreamStatus @default(OPEN)
+  stream      Stream       @relation(fields: [streamId], references: [id], onDelete: Cascade)
+
+  @@map("stream_pull")
+}
+
+enum StreamStatus {
+  OPEN
+  CLOSED
+}
