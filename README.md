@@ -55,7 +55,24 @@ Uma opção para melhorar o desempenho da aplicação seria guardar em um cache 
 
 ## ▶️ Como Rodar a Aplicação
 É necessário possuir o Docker e o Docker Compose instalados na sua máquina.
+Primeiramente, é necessário clonar o repositório:
+```bash
+git clone https://github.com/guilhermefpeixoto/beeteller-backend.git
+```
 Com o Docker instalado e repositório clonado, abra seu console na raiz do repositório e rode o comando abaixo:
 ```bash
-docker compose up -d
+docker compose up --build
+```
+Feito isso, os containers do banco de dados e da aplicação estarão rodando na sua máquina. É possível se comunicar com o serviço a partir da porta 8000.
+
+## 🧪 Como Rodar os Testes Unitários
+Para rodar os testes unitários, é importante que todas as dependências estejam instaladas. O responsável por gerenciar as dependências é o npm. Então é necessário que ele esteja instalado na sua máquina.
+Para rodar os testes, entre no diretório raiz do projeto e rode o comando abaixo:
+```bash
+npm install
+```
+Feito isso, você terá instalado todas as dependências do projeto, incluindo as necessárias para os testes.
+Então rode:
+```
+npm run test
 ```
