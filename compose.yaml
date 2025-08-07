@@ -1,4 +1,16 @@
 services:
+
+  app:
+    container_name: pix-reader-app
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: "postgresql://api:api@db:5432/pix_messages"
+      PORT: 8000
+    depends_on:
+      db:
+        condition: service_healthy
   db:
     image: postgres:16-alpine
     container_name: pix-messages-db
@@ -9,8 +21,8 @@ services:
       POSTGRES_DB: pix_messages
     ports:
       - "5432:5432"
-    volumes:
-      - pg_data:/var/lib/postgresql/data
-
-volumes:
-  pg_data:
+    healthcheck:
+      test: ["CMD", "psql", "-h", "localhost", "-U", "api", "-d", "pix_messages", "-c", "SELECT 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
