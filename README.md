@@ -55,7 +55,7 @@ Uma opção para melhorar o desempenho da aplicação seria guardar em um cache 
 
 ## ▶️ Como Rodar a Aplicação
 É necessário possuir o Docker e o Docker Compose instalados na sua máquina.
-Com o Docker instalado, abra seu console e rode o comando abaixo:
+Com o Docker instalado e clonar o repositório, abra seu console na raiz do repositório e rode o comando abaixo:
 ```bash
 docker compose up -d
 ```
